@@ -1,24 +1,21 @@
 import React from 'react';
-import {View ,Text, StyleSheet, TouchableOpacity  } from 'react-native';
+import { StatusBar } from 'react-native';
+import { NavigationContainer} from '@react-navigation/native';
+import TabNavigator from './src/presentation/navigation/TabNavigator'; 
 import { enableScreens } from 'react-native-screens';
+
 enableScreens();
 
-function App() {
+function App(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={()=>{}}>
-        <Text>Let's go!</Text>
-      </TouchableOpacity>
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor='white'/>
+      <NavigationContainer>
+        <TabNavigator/>
+      </NavigationContainer>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems:'center',
-    justifyContent:'center',
-  },
-});
 
 export default App;

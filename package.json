@@ -13,12 +13,13 @@
     "clean-ios": "cd ios && pod deintegrate && pod install && cd ..",
     "pod-start": "cd ios && bundle install && bundle exec pod install && cd ..",
     "pod-install": "cd ios && pod install && cd .."
-
   },
   "dependencies": {
-    "@react-native/new-app-screen": "0.80.0",
+    "@react-navigation/bottom-tabs": "^7.4.2",
+    "@react-navigation/native": "^7.1.14",
     "react": "19.1.0",
     "react-native": "0.80.0",
+    "react-native-safe-area-context": "^5.5.0",
     "react-native-screens": "^4.11.1"
   },
   "devDependencies": {
