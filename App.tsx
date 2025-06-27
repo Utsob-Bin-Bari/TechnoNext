@@ -7,7 +7,7 @@ function App() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={()=>{}}>
-        <Text>TechnoNext</Text>
+        <Text>Let's go!</Text>
       </TouchableOpacity>
     </View>
   );

@@ -10,8 +10,10 @@
     "test": "jest",
     "open": "open ios/TechnoNext.xcworkspace",
     "clean-android": "cd android && ./gradlew clean && cd ..",
-    "clean-ios": "cd ios && pod deintegrate && RCT_NEW_ARCH_ENABLED=1 pod install && cd ..",
-    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd .."
+    "clean-ios": "cd ios && pod deintegrate && pod install && cd ..",
+    "pod-start": "cd ios && bundle install && bundle exec pod install && cd ..",
+    "pod-install": "cd ios && pod install && cd .."
+
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.80.0",
