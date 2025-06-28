@@ -10,7 +10,7 @@ interface FavouriteProps {
 const Favourite: React.FC<FavouriteProps> = ({ 
   size = 23,
   color = "#111827",
-  opacity = 0.8 
+  opacity = 1
 }) => {
   const width = size - 2;
   const height = size;

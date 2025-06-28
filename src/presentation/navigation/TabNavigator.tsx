@@ -1,12 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
 import Home from '../screens/Home';
 import Login from '../screens/Login';
 import Favourite from '../screens/Favourite';
 import ProductDetails from '../screens/ProductDetails';
 import Map from '../screens/Map';
 import { TabParamList } from '../../domain/types/navigation';
+import { RootState } from '../../application/store/store';
 import HomeIcon from '../../../assets/svgs/Home';
 import MapIcon from '../../../assets/svgs/Map';
 import FavouriteIcon from '../../../assets/svgs/Favourite';
@@ -21,21 +23,24 @@ const hideTabBarOptions: BottomTabNavigationOptions = {
 };
 
 const TabNavigator = () => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
+
   return (
     <Tab.Navigator 
-      initialRouteName="Login" 
+      initialRouteName={isAuthenticated ? "Home" : "Login"}
       screenOptions={{ 
         headerShown: false,
         tabBarStyle: {
           height: 80,
           paddingTop: 8,
           backgroundColor: "white",
+          display: isAuthenticated ? 'flex' : 'none',
         },
         tabBarActiveTintColor: Colors.Orange,
         tabBarInactiveTintColor: Colors.TabIcons,
       }}
     >
-      {/* Screens with tab bar */}
+      {/* Authenticated screens with tab bar */}
       <Tab.Screen 
         name="Home" 
         component={Home}
@@ -49,7 +54,7 @@ const TabNavigator = () => {
       <Tab.Screen 
         name="Favourite" 
         component={Favourite}
-                options={{
+        options={{
           tabBarLabel:'Favorite',
           tabBarIcon: ({color, size}) => (
             <FavouriteIcon color={color} size={size}/>
@@ -67,13 +72,15 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="Login" 
-        component={Login}
-        options={hideTabBarOptions}
-      />
-      <Tab.Screen 
         name="ProductDetails" 
         component={ProductDetails}
+        options={hideTabBarOptions}
+      />
+      
+      {/* Auth screen */}
+      <Tab.Screen 
+        name="Login" 
+        component={Login}
         options={hideTabBarOptions}
       />
     </Tab.Navigator>

@@ -28,3 +28,10 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 # Commit 8: Design Login Page (Keep in mind for portail and landscape mode).
 * Assemble all the component on login page.
 * Keep landscape mode in mind while designing. I use width as percentage so the field will extend when on landscape mode and keep the screen in scrollview so if anything goes outside of height we can scroll it in.
+
+# Commit 9: Use RTK Qurry, Redux and async-storage for fetching and Storing the data and showing on Diffrent Screen.
+* On Successfull login request it will store data on redux and locally so that it can bypass login if user login once.
+* Added a logout button to clear both redux and local store for login with another credential. 
+* Action, Store and Reducer is designed according to the response of RTK query.
+* Home Page fetching data on mount and pull down to refresh option is added. 
+* On pressing the product it will take to product details page.
