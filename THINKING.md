@@ -13,4 +13,9 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 # Commit 4: Add Logo to the project with react-native-svg.
 * react-native-svg package is added for adding icon and logo directly from figma design. It's give us freedom to use any icon from any design. react-native-vector-icons restricts us to use only available icons.
 
+# Commit 5: Update footer (tab navigation bar) with svg icons.
+* Select svgs for tab icon and implement it on tab bar.
+
+
+
 

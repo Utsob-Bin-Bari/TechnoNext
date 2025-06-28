@@ -7,6 +7,10 @@ import Favourite from '../screens/Favourite';
 import ProductDetails from '../screens/ProductDetails';
 import Map from '../screens/Map';
 import { TabParamList } from '../../domain/types/navigation';
+import HomeIcon from '../../../assets/svgs/Home';
+import MapIcon from '../../../assets/svgs/Map';
+import FavouriteIcon from '../../../assets/svgs/Favourite';
+import { Colors } from '../constants/Colors';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -27,25 +31,41 @@ const TabNavigator = () => {
           paddingTop: 8,
           backgroundColor: "white",
         },
-        tabBarActiveTintColor: 'blue',
-        tabBarInactiveTintColor: 'orange',
+        tabBarActiveTintColor: Colors.Orange,
+        tabBarInactiveTintColor: Colors.TabIcons,
       }}
     >
       {/* Screens with tab bar */}
       <Tab.Screen 
         name="Home" 
         component={Home}
-      />
-      <Tab.Screen 
-        name="Map" 
-        component={Map}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <HomeIcon color={color} size={size}/>
+          )
+        }}
       />
       <Tab.Screen 
         name="Favourite" 
         component={Favourite}
+                options={{
+          tabBarLabel:'Favorite',
+          tabBarIcon: ({color, size}) => (
+            <FavouriteIcon color={color} size={size}/>
+          )
+        }}
       />
-      
-      {/* Screens without tab bar */}
+      <Tab.Screen 
+        name="Map" 
+        component={Map}
+        options={{
+          tabBarLabel:'Map',
+          tabBarIcon: ({color, size}) => (
+            <MapIcon color={color} size={size}/>
+          )
+        }}
+      />
       <Tab.Screen 
         name="Login" 
         component={Login}
