@@ -13,12 +13,14 @@ import {
   Dimensions
 } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
 import GlobalStyles from '../constants/GlobalStyle';
 import { useGetProductByIdQuery } from '../../infrastructure /adapters/productApi';
-import { RootState } from '../../application/store/store';
+import { RootState, AppDispatch } from '../../application/store/store';
+import { addToFavorites, removeFromFavorites } from '../../application/store/action';
+import { FavoriteStorage } from '../../application/services/login';
 
 type ProductDetailsRouteProp = RouteProp<TabParamList, 'ProductDetails'>;
 
@@ -27,11 +29,15 @@ const { width } = Dimensions.get('window');
 const ProductDetails: React.FC = () => {
   const navigation = useNavigation<NavigationProp<TabParamList>>();
   const route = useRoute<ProductDetailsRouteProp>();
+  const dispatch = useDispatch<AppDispatch>();
   const { productId } = route.params;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
   const { isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
+  const favoriteIds = useSelector((state: RootState) => state.favorites.favorites?.favoriteIds || []);
   const { data: product, error, isLoading } = useGetProductByIdQuery(productId);
+  
+  const isFavorite = favoriteIds.includes(productId);
 
   const handleBack = () => {
     navigation.goBack();
@@ -43,6 +49,18 @@ const ProductDetails: React.FC = () => {
 
   const handleBuyNow = () => {
     Alert.alert('Buy Now', `Proceeding to checkout for ${product?.title}`);
+  };
+
+  const handleFavoriteToggle = async () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorites({ productId }));
+      const updatedFavorites = favoriteIds.filter((id: number) => id !== productId);
+      await FavoriteStorage.saveFavorites(updatedFavorites);
+    } else {
+      dispatch(addToFavorites({ productId }));
+      const updatedFavorites = [...favoriteIds, productId];
+      await FavoriteStorage.saveFavorites(updatedFavorites);
+    }
   };
 
   const renderImageGallery = () => {
@@ -153,7 +171,11 @@ const ProductDetails: React.FC = () => {
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>{product.title}</Text>
-        <View style={styles.headerSpacer} />
+        <TouchableOpacity style={styles.favoriteHeaderButton} onPress={handleFavoriteToggle}>
+          <Text style={[styles.favoriteHeaderIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
+            ♥
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -252,6 +274,18 @@ const ProductDetails: React.FC = () => {
           <Text style={styles.buyNowText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
+      
+      {/* Favorite Action */}
+      <View style={styles.favoriteContainer}>
+        <TouchableOpacity style={styles.favoriteActionButton} onPress={handleFavoriteToggle}>
+          <Text style={[styles.favoriteActionIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
+            ♥
+          </Text>
+          <Text style={[styles.favoriteActionText, { color: isFavorite ? '#ef4444' : '#666' }]}>
+            {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -285,8 +319,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 10,
   },
-  headerSpacer: {
-    width: 60,
+  favoriteHeaderButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  favoriteHeaderIcon: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   scrollContainer: {
     flex: 1,
@@ -515,6 +566,32 @@ const styles = StyleSheet.create({
     color: Colors.White,
     fontWeight: '600',
     fontSize: 16,
+  },
+  favoriteContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    backgroundColor: Colors.White,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  favoriteActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f9f9f9',
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  favoriteActionIcon: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  favoriteActionText: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

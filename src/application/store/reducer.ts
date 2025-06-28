@@ -4,14 +4,19 @@ import {
     LogOut, 
     RestoreAuth,
     InitializeComplete,
-    AuthActionTypes
+    AuthActionTypes,
+    AddToFavorites,
+    RemoveFromFavorites,
+    RestoreFavorites,
+    SetFavoriteLoading,
+    FavoriteActionTypes
 } from "./action";
-import { AuthState } from "../../domain/types/redux";
+import { AuthState, FavoriteState } from "../../domain/types/redux";
 import { combineReducers } from '@reduxjs/toolkit';
 import { authApi } from '../../infrastructure /adapters/authApi';
 import { productApi } from '../../infrastructure /adapters/productApi';
 
-const initialState: AuthState = {
+const initialAuthState: AuthState = {
     authentication: {
         accessToken: "",
         refreshToken: "",
@@ -21,8 +26,15 @@ const initialState: AuthState = {
     },
 };
 
+const initialFavoriteState: FavoriteState = {
+    favorites: {
+        favoriteIds: [],
+        isLoading: false,
+    },
+};
+
 function authReducer(
-    state: AuthState = initialState,
+    state: AuthState = initialAuthState,
     action: AuthActionTypes
 ): AuthState {
     switch (action.type) {
@@ -88,8 +100,61 @@ function authReducer(
     }
 }
 
+function favoriteReducer(
+    state: FavoriteState = initialFavoriteState,
+    action: FavoriteActionTypes
+): FavoriteState {
+    switch (action.type) {
+        case AddToFavorites: {
+            const currentFavorites = state.favorites?.favoriteIds || [];
+            if (currentFavorites.includes(action.payload.productId)) {
+                return state; // Already in favorites
+            }
+            return {
+                ...state,
+                favorites: {
+                    favoriteIds: [...currentFavorites, action.payload.productId],
+                    isLoading: state.favorites?.isLoading || false,
+                },
+            };
+        }
+        case RemoveFromFavorites: {
+            const currentFavorites = state.favorites?.favoriteIds || [];
+            return {
+                ...state,
+                favorites: {
+                    favoriteIds: currentFavorites.filter(id => id !== action.payload.productId),
+                    isLoading: state.favorites?.isLoading || false,
+                },
+            };
+        }
+        case RestoreFavorites: {
+            return {
+                ...state,
+                favorites: {
+                    ...state.favorites,
+                    favoriteIds: action.payload.favoriteIds,
+                    isLoading: false,
+                },
+            };
+        }
+        case SetFavoriteLoading: {
+            return {
+                ...state,
+                favorites: {
+                    favoriteIds: state.favorites?.favoriteIds || [],
+                    isLoading: action.payload.isLoading,
+                },
+            };
+        }
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers({
     auth: authReducer,
+    favorites: favoriteReducer,
     [authApi.reducerPath]: authApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
 });

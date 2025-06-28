@@ -96,4 +96,12 @@ export interface ProductState {
     error: string | null;
     total: number;
   };
+}
+
+// Favorite Types
+export interface FavoriteState {
+  favorites?: {
+    favoriteIds: number[];
+    isLoading: boolean;
+  };
 } 

@@ -35,3 +35,8 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Action, Store and Reducer is designed according to the response of RTK query.
 * Home Page fetching data on mount and pull down to refresh option is added. 
 * On pressing the product it will take to product details page.
+
+# Commit 10: Update redux, action to keep favourite list and show them on Favourite Page
+* Crated reducer, action to keep favourite list and add or remove one product from favourite list. 
+* Favourite Page is showing only those product which in favourite list.
+* Note: Favourite List is on redux so if we restart favourite list will be empty again.

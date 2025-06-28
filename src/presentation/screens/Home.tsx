@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
-import { logOut } from '../../application/store/action';
-import { AuthStorage } from '../../application/services/login';
+import { logOut, addToFavorites, removeFromFavorites } from '../../application/store/action';
+import { AuthStorage, FavoriteStorage } from '../../application/services/login';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
@@ -27,6 +27,7 @@ const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation<NavigationProp<TabParamList>>();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
+  const favoriteIds = useSelector((state: RootState) => state.favorites.favorites?.favoriteIds || []);
   
   // RTK Query hooks
   const { data: productsData, error, isLoading, refetch } = useGetAllProductsQuery({ limit: 20 });
@@ -50,6 +51,7 @@ const Home: React.FC = () => {
           style: 'destructive',
           onPress: async () => {
             await AuthStorage.clearAuthData();
+            await FavoriteStorage.clearFavorites();
             dispatch(logOut());
             navigation.navigate('Login');
           },
@@ -66,24 +68,52 @@ const Home: React.FC = () => {
     navigation.navigate('ProductDetails', { productId: product.id });
   };
 
-  const renderProductItem = ({ item }: { item: Product }) => (
-    <TouchableOpacity style={styles.productCard} onPress={() => handleProductPress(item)}>
-      <Image source={{ uri: item.thumbnail }} style={styles.productImage} />
-      <View style={styles.productInfo}>
-        <Text style={styles.productTitle} numberOfLines={2}>{item.title}</Text>
-        <Text style={styles.productBrand}>{item.brand}</Text>
-        <Text style={styles.productDescription} numberOfLines={2}>{item.description}</Text>
-        <View style={styles.productPricing}>
-          <Text style={styles.productPrice}>${item.price}</Text>
-          <Text style={styles.productDiscount}>{item.discountPercentage}% off</Text>
+  const handleFavoriteToggle = async (productId: number) => {
+    const isFavorite = favoriteIds.includes(productId);
+    
+    if (isFavorite) {
+      dispatch(removeFromFavorites({ productId }));
+      const updatedFavorites = favoriteIds.filter((id: number) => id !== productId);
+      await FavoriteStorage.saveFavorites(updatedFavorites);
+    } else {
+      dispatch(addToFavorites({ productId }));
+      const updatedFavorites = [...favoriteIds, productId];
+      await FavoriteStorage.saveFavorites(updatedFavorites);
+    }
+  };
+
+  const renderProductItem = ({ item }: { item: Product }) => {
+    const isFavorite = favoriteIds.includes(item.id);
+    
+    return (
+      <TouchableOpacity style={styles.productCard} onPress={() => handleProductPress(item)}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: item.thumbnail }} style={styles.productImage} />
+          <TouchableOpacity 
+            style={styles.favoriteButton}
+            onPress={() => handleFavoriteToggle(item.id)}
+          >
+            <Text style={[styles.favoriteIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
+              ♥
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.productMeta}>
-          <Text style={styles.productRating}>⭐ {item.rating}</Text>
-          <Text style={styles.productStock}>Stock: {item.stock}</Text>
+        <View style={styles.productInfo}>
+          <Text style={styles.productTitle} numberOfLines={2}>{item.title}</Text>
+          <Text style={styles.productBrand}>{item.brand}</Text>
+          <Text style={styles.productDescription} numberOfLines={2}>{item.description}</Text>
+          <View style={styles.productPricing}>
+            <Text style={styles.productPrice}>${item.price}</Text>
+            <Text style={styles.productDiscount}>{item.discountPercentage}% off</Text>
+          </View>
+          <View style={styles.productMeta}>
+            <Text style={styles.productRating}>⭐ {item.rating}</Text>
+            <Text style={styles.productStock}>Stock: {item.stock}</Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -170,11 +200,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  welcomeText: {
-    fontSize: 16,
-    color: '#666',
-    fontWeight: '400',
-  },
   userName: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -216,11 +241,37 @@ const styles = StyleSheet.create({
     elevation: 5,
     overflow: 'hidden',
   },
+  imageContainer: {
+    position: 'relative',
+  },
   productImage: {
     width: '100%',
     height: 120,
     resizeMode: 'cover',
     backgroundColor: '#f5f5f5',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 15,
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  favoriteIcon: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   productInfo: {
     padding: 12,

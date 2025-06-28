@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { enableScreens } from 'react-native-screens';
 import store, { RootState } from './src/application/store/store';
-import { AuthStorage } from './src/application/services/login';
-import { restoreAuth, initializeComplete } from './src/application/store/action';
+import { AuthStorage, FavoriteStorage } from './src/application/services/login';
+import { restoreAuth, initializeComplete, restoreFavorites } from './src/application/store/action';
 import TabNavigator from './src/presentation/navigation/TabNavigator';
 import { Colors } from './src/presentation/constants/Colors';
 
@@ -16,20 +16,28 @@ const AppContent: React.FC = () => {
   const { isLoading } = useSelector((state: RootState) => state.auth.authentication || {});
 
   useEffect(() => {
-    const initializeAuth = async () => {
+    const initializeApp = async () => {
       try {
-        const authData = await AuthStorage.getAuthData();
+        // Initialize both auth and favorites
+        const [authData, favoriteIds] = await Promise.all([
+          AuthStorage.getAuthData(),
+          FavoriteStorage.getFavorites()
+        ]);
+
         if (authData) {
           dispatch(restoreAuth(authData));
         } else {
           dispatch(initializeComplete());
         }
+
+        dispatch(restoreFavorites({ favoriteIds }));
       } catch (error) {
-        console.error('Error initializing auth:', error);
+        console.error('Error initializing app:', error);
         dispatch(initializeComplete());
+        dispatch(restoreFavorites({ favoriteIds: [] }));
       }
     };
-    initializeAuth();
+    initializeApp();
   }, [dispatch]);
 
   if (isLoading) {
