@@ -17,5 +17,7 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Select svgs for tab icon and implement it on tab bar.
 
 
-
+# Commit 6: Create Resuable Button and TextInput for Login Page.
+* Design a Button match with logo and design which is reusable.
+* Created GlobalStyle to reuse the styles from other page instead of creating them again and agiain.
 
