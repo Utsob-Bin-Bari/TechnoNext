@@ -24,3 +24,7 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 # Commit 7: Change the gitIgnore to not upload build specific file of android and ios.
 * AI Generated Code for git ignore of React Native added.
 * Cause If I upload the build file again and again tester will have to build ios and android on every version of my code due to diffrence on the devices.
+
+# Commit 8: Design Login Page (Keep in mind for portail and landscape mode).
+* Assemble all the component on login page.
+* Keep landscape mode in mind while designing. I use width as percentage so the field will extend when on landscape mode and keep the screen in scrollview so if anything goes outside of height we can scroll it in.
