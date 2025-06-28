@@ -21,3 +21,6 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Design a Button match with logo and design which is reusable.
 * Created GlobalStyle to reuse the styles from other page instead of creating them again and agiain.
 
+# Commit 7: Change the gitIgnore to not upload build specific file of android and ios.
+* AI Generated Code for git ignore of React Native added.
+* Cause If I upload the build file again and again tester will have to build ios and android on every version of my code due to diffrence on the devices.
