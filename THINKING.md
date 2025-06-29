@@ -53,3 +53,4 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Time adapter to use data-fns package on Infrastructure layer.
 * Time service to handle start, stop logic on application layer. Used singleton to keep one instant to prevent memory leak. 
 * Time widget to make a design align with our design and give is some default position.
+* Added animation to improve user experience.
