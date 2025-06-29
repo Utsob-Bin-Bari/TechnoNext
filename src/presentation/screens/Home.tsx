@@ -16,7 +16,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { logOut, addToFavorites, removeFromFavorites } from '../../application/store/action';
-import { AuthStorage, FavoriteStorage } from '../../application/services/login';
+import { AuthStorage } from '../../application/services/login';
+import { FavoriteStorage } from '../../application/services/product';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
@@ -25,10 +26,11 @@ import { useGetAllProductsQuery, useLazyGetAllProductsQuery } from '../../infras
 import { Product } from '../../domain/types/redux';
 import Favourite from '../../../assets/svgs/Favourite';
 import DynamicButton from '../components/DynamicButton';
+import TimerWidget from '../components/TimerWidget';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation<NavigationProp<TabParamList>>();
+    const navigation = useNavigation<NavigationProp<TabParamList>>();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
   const favoriteIds = useSelector((state: RootState) => state.favorites.favorites?.favoriteIds || []);
   
@@ -43,12 +45,20 @@ const Home: React.FC = () => {
     }, [refetch])
   );
 
-  // Handle navigation when authentication state changes
+    // Handle navigation when authentication state changes
   useEffect(() => {
     if (!isAuthenticated) {
       navigation.navigate('Login');
     }
   }, [isAuthenticated, navigation]);
+
+  // Cleanup timer when component unmounts
+  useEffect(() => {
+    return () => {
+      // Timer will continue running globally, but we clean up if needed
+      // The timer is managed by the TimeService singleton
+    };
+  }, []);
 
   const handleLogout = async () => {
     Alert.alert(
@@ -107,7 +117,7 @@ const Home: React.FC = () => {
               color={isFavorite ? '#ef4444' : '#d1d5db'} 
               opacity={1}
             />
-          </TouchableOpacity>
+            </TouchableOpacity>
         </View>
         <View style={styles.productInfo}>
           <Text style={styles.productTitle} numberOfLines={2}>{item.title}</Text>
@@ -159,6 +169,7 @@ const Home: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.White} />
+      <TimerWidget position="bottom-right" showSeconds={true} />
       {renderHeader()}
       
       {error ? (

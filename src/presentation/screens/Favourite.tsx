@@ -15,7 +15,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { removeFromFavorites, addToFavorites } from '../../application/store/action';
-import { FavoriteStorage } from '../../application/services/login';
+import { FavoriteStorage } from '../../application/services/product';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';

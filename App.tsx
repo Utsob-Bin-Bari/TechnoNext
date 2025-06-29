@@ -4,10 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { enableScreens } from 'react-native-screens';
 import store, { RootState } from './src/application/store/store';
-import { AuthStorage, FavoriteStorage } from './src/application/services/login';
+import { AuthStorage } from './src/application/services/login';
+import { FavoriteStorage } from './src/application/services/product';
 import { restoreAuth, initializeComplete, restoreFavorites } from './src/application/store/action';
 import TabNavigator from './src/presentation/navigation/TabNavigator';
 import { Colors } from './src/presentation/constants/Colors';
+import { TimeService } from './src/application/services/time';
 
 enableScreens();
 
@@ -31,6 +33,10 @@ const AppContent: React.FC = () => {
         }
 
         dispatch(restoreFavorites({ favoriteIds }));
+
+        // Initialize timer service
+        const timeService = TimeService.getInstance();
+        timeService.startTimer();
       } catch (error) {
         console.error('Error initializing app:', error);
         dispatch(initializeComplete());

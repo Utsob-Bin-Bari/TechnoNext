@@ -44,3 +44,12 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 # Commit 11: Fixed back button on Product Details page and redesign home and favourite page.
 * Home->Product Details->Back Button(Home) && Favourite->Product Details->Back Button(Favourite).
 * Log out button color change.
+
+# Commit 12: Readme.md file is updated for guidence on how to run this appliction.
+
+# Commit 13: Timer Implementation.
+* Though task aksed to use a native module due to less experience and time shortage I used date-fns package to handle the timer implementation.
+* I created entity on domain layer.
+* Time adapter to use data-fns package on Infrastructure layer.
+* Time service to handle start, stop logic on application layer. Used singleton to keep one instant to prevent memory leak. 
+* Time widget to make a design align with our design and give is some default position.

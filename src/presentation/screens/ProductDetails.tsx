@@ -17,11 +17,10 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import { useSelector, useDispatch } from 'react-redux';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
-import GlobalStyles from '../constants/GlobalStyle';
 import { useGetProductByIdQuery } from '../../infrastructure/adapters/productApi';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { addToFavorites, removeFromFavorites } from '../../application/store/action';
-import { FavoriteStorage } from '../../application/services/login';
+import { FavoriteStorage } from '../../application/services/product';
 import FavouriteIcon from '../../../assets/svgs/Favourite';
 
 type ProductDetailsRouteProp = RouteProp<TabParamList, 'ProductDetails'>;

@@ -35,7 +35,6 @@ export interface AuthState {
   };
 }
 
-// Product Types
 export interface Product {
   id: number;
   title: string;
@@ -50,7 +49,6 @@ export interface Product {
   images: string[];
 }
 
-// Extended Product interface for detailed view
 export interface ProductDetails extends Product {
   tags?: string[];
   sku?: string;
@@ -98,7 +96,7 @@ export interface ProductState {
   };
 }
 
-// Favorite Types
+
 export interface FavoriteState {
   favorites?: {
     favoriteIds: number[];

@@ -1,2 +1,1 @@
-// Domain entities index file
-export {}; 
+export * from './time'; 
