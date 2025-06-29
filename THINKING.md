@@ -40,3 +40,7 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Crated reducer, action to keep favourite list and add or remove one product from favourite list. 
 * Favourite Page is showing only those product which in favourite list.
 * Note: Favourite List is on redux so if we restart favourite list will be empty again.
+
+# Commit 11: Fixed back button on Product Details page and redesign home and favourite page.
+* Home->Product Details->Back Button(Home) && Favourite->Product Details->Back Button(Favourite).
+* Log out button color change.
