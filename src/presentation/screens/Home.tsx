@@ -10,7 +10,8 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
@@ -20,8 +21,10 @@ import { RootState, AppDispatch } from '../../application/store/store';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
 import GlobalStyles from '../constants/GlobalStyle';
-import { useGetAllProductsQuery, useLazyGetAllProductsQuery } from '../../infrastructure /adapters/productApi';
+import { useGetAllProductsQuery, useLazyGetAllProductsQuery } from '../../infrastructure/adapters/productApi';
 import { Product } from '../../domain/types/redux';
+import Favourite from '../../../assets/svgs/Favourite';
+import DynamicButton from '../components/DynamicButton';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +43,13 @@ const Home: React.FC = () => {
     }, [refetch])
   );
 
+  // Handle navigation when authentication state changes
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigation.navigate('Login');
+    }
+  }, [isAuthenticated, navigation]);
+
   const handleLogout = async () => {
     Alert.alert(
       'Logout',
@@ -53,7 +63,6 @@ const Home: React.FC = () => {
             await AuthStorage.clearAuthData();
             await FavoriteStorage.clearFavorites();
             dispatch(logOut());
-            navigation.navigate('Login');
           },
         },
       ]
@@ -65,7 +74,7 @@ const Home: React.FC = () => {
   }, [refetch]);
 
   const handleProductPress = (product: Product) => {
-    navigation.navigate('ProductDetails', { productId: product.id });
+    navigation.navigate('ProductDetails', { productId: product.id, sourceScreen: 'Home' });
   };
 
   const handleFavoriteToggle = async (productId: number) => {
@@ -93,9 +102,11 @@ const Home: React.FC = () => {
             style={styles.favoriteButton}
             onPress={() => handleFavoriteToggle(item.id)}
           >
-            <Text style={[styles.favoriteIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
-              ♥
-            </Text>
+            <Favourite 
+              size={16} 
+              color={isFavorite ? '#ef4444' : '#d1d5db'} 
+              opacity={1}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.productInfo}>
@@ -120,9 +131,9 @@ const Home: React.FC = () => {
       <View>
         <Text style={styles.userName}>{user?.firstName} {user?.lastName}</Text>
       </View>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
+      <View style={{width: '30%'}}>
+        <DynamicButton text="Logout" onPress={handleLogout} backgroundColor={Colors.RedDelete} borderColor={Colors.RedDelete} height={40} />
+      </View>
     </View>
   );
 
@@ -142,14 +153,12 @@ const Home: React.FC = () => {
   );
 
   if (!isAuthenticated) {
-    navigation.navigate('Login');
     return null;
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.White} />
-      
       {renderHeader()}
       
       {error ? (
@@ -195,7 +204,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingTop: Platform.OS === 'ios' ? 10 : 38,
+    paddingBottom: 7,
     backgroundColor: Colors.White,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
@@ -230,15 +240,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.White,
     borderRadius: 12,
     marginHorizontal: 5,
-    marginVertical: 8,
+    marginVertical: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 6,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 12,
     overflow: 'hidden',
   },
   imageContainer: {
@@ -254,7 +264,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 15,
     width: 30,
     height: 30,
@@ -263,16 +273,13 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 3,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
   },
-  favoriteIcon: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   productInfo: {
     padding: 12,
   },
@@ -352,6 +359,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 6,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 10,
   },
   retryText: {
     color: Colors.White,

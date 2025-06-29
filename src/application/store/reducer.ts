@@ -13,8 +13,8 @@ import {
 } from "./action";
 import { AuthState, FavoriteState } from "../../domain/types/redux";
 import { combineReducers } from '@reduxjs/toolkit';
-import { authApi } from '../../infrastructure /adapters/authApi';
-import { productApi } from '../../infrastructure /adapters/productApi';
+import { authApi } from '../../infrastructure/adapters/authApi';
+import { productApi } from '../../infrastructure/adapters/productApi';
 
 const initialAuthState: AuthState = {
     authentication: {

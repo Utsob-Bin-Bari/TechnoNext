@@ -54,7 +54,7 @@ const TabNavigator = () => {
       <Tab.Screen 
         name="Favourite" 
         component={Favourite}
-        options={{
+                options={{
           tabBarLabel:'Favorite',
           tabBarIcon: ({color, size}) => (
             <FavouriteIcon color={color} size={size}/>

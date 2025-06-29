@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -10,17 +10,19 @@ import {
   Image,
   ActivityIndicator,
   Alert,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
 import GlobalStyles from '../constants/GlobalStyle';
-import { useGetProductByIdQuery } from '../../infrastructure /adapters/productApi';
+import { useGetProductByIdQuery } from '../../infrastructure/adapters/productApi';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { addToFavorites, removeFromFavorites } from '../../application/store/action';
 import { FavoriteStorage } from '../../application/services/login';
+import FavouriteIcon from '../../../assets/svgs/Favourite';
 
 type ProductDetailsRouteProp = RouteProp<TabParamList, 'ProductDetails'>;
 
@@ -30,7 +32,7 @@ const ProductDetails: React.FC = () => {
   const navigation = useNavigation<NavigationProp<TabParamList>>();
   const route = useRoute<ProductDetailsRouteProp>();
   const dispatch = useDispatch<AppDispatch>();
-  const { productId } = route.params;
+  const { productId, sourceScreen } = route.params;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
   const { isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
@@ -39,8 +41,25 @@ const ProductDetails: React.FC = () => {
   
   const isFavorite = favoriteIds.includes(productId);
 
+  // Handle navigation when authentication state changes
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigation.navigate('Login');
+    }
+  }, [isAuthenticated, navigation]);
+
   const handleBack = () => {
-    navigation.goBack();
+    // Navigate back to the source screen if provided
+    if (sourceScreen) {
+      navigation.navigate(sourceScreen);
+    } else {
+      // Fallback to goBack or Home if no source screen is specified
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      } else {
+        navigation.navigate('Home');
+      }
+    }
   };
 
   const handleAddToCart = () => {
@@ -131,7 +150,6 @@ const ProductDetails: React.FC = () => {
   };
 
   if (!isAuthenticated) {
-    navigation.navigate('Login');
     return null;
   }
 
@@ -172,9 +190,11 @@ const ProductDetails: React.FC = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>{product.title}</Text>
         <TouchableOpacity style={styles.favoriteHeaderButton} onPress={handleFavoriteToggle}>
-          <Text style={[styles.favoriteHeaderIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
-            ♥
-          </Text>
+          <FavouriteIcon 
+            size={18} 
+            color={isFavorite ? '#ef4444' : '#d1d5db'} 
+            opacity={1}
+          />
         </TouchableOpacity>
       </View>
 
@@ -274,18 +294,6 @@ const ProductDetails: React.FC = () => {
           <Text style={styles.buyNowText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
-      
-      {/* Favorite Action */}
-      <View style={styles.favoriteContainer}>
-        <TouchableOpacity style={styles.favoriteActionButton} onPress={handleFavoriteToggle}>
-          <Text style={[styles.favoriteActionIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
-            ♥
-          </Text>
-          <Text style={[styles.favoriteActionText, { color: isFavorite ? '#ef4444' : '#666' }]}>
-            {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -299,7 +307,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingTop:Platform.OS === 'ios' ? 15 : 38,
+    paddingBottom:Platform.OS === 'ios' ? 7:7,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
@@ -335,10 +344,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
-  favoriteHeaderIcon: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+
   scrollContainer: {
     flex: 1,
   },
@@ -502,7 +508,7 @@ const styles = StyleSheet.create({
   bottomActions: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 20,
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
     backgroundColor: Colors.White,
@@ -584,9 +590,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
   },
-  favoriteActionIcon: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  favoriteActionIconContainer: {
     marginRight: 8,
   },
   favoriteActionText: {

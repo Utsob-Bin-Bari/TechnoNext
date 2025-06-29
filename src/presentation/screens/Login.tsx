@@ -8,7 +8,7 @@ import Logo from '../../../assets/svgs/Logo';
 import { Colors } from '../constants/Colors';
 import GlobalStyles from '../constants/GlobalStyle';
 import { TabParamList } from '../../domain/types/navigation';
-import { useLoginMutation } from '../../infrastructure /adapters/authApi';
+import { useLoginMutation } from '../../infrastructure/adapters/authApi';
 import { logIn, setLoading } from '../../application/store/action';
 import { AuthStorage } from '../../application/services/login';
 import { AppDispatch, RootState } from '../../application/store/store';

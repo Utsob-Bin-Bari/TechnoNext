@@ -9,7 +9,8 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
@@ -18,8 +19,9 @@ import { FavoriteStorage } from '../../application/services/login';
 import { RootState, AppDispatch } from '../../application/store/store';
 import { TabParamList } from '../../domain/types/navigation';
 import { Colors } from '../constants/Colors';
-import { useGetAllProductsQuery } from '../../infrastructure /adapters/productApi';
+import { useGetAllProductsQuery } from '../../infrastructure/adapters/productApi';
 import { Product } from '../../domain/types/redux';
+import FavouriteIcon from '../../../assets/svgs/Favourite';
 
 const Favourite: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,7 +46,7 @@ const Favourite: React.FC = () => {
   }, [refetch]);
 
   const handleProductPress = (product: Product) => {
-    navigation.navigate('ProductDetails', { productId: product.id });
+    navigation.navigate('ProductDetails', { productId: product.id, sourceScreen: 'Favourite' });
   };
 
   const handleFavoriteToggle = async (productId: number) => {
@@ -72,9 +74,11 @@ const Favourite: React.FC = () => {
             style={styles.favoriteButton}
             onPress={() => handleFavoriteToggle(item.id)}
           >
-            <Text style={[styles.favoriteIcon, { color: isFavorite ? '#ef4444' : '#d1d5db' }]}>
-              ♥
-            </Text>
+            <FavouriteIcon 
+              size={16} 
+              color={isFavorite ? '#ef4444' : '#d1d5db'} 
+              opacity={1}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.productInfo}>
@@ -105,7 +109,13 @@ const Favourite: React.FC = () => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateIcon}>♥</Text>
+      <View style={styles.emptyStateIconContainer}>
+        <FavouriteIcon 
+          size={64} 
+          color="#d1d5db" 
+          opacity={1}
+        />
+      </View>
       <Text style={styles.emptyStateTitle}>No favorites yet</Text>
       <Text style={styles.emptyStateText}>
         Start adding products to your favorites to see them here
@@ -174,8 +184,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.White,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? 10 : 40.5,
     backgroundColor: Colors.White,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
@@ -204,15 +218,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.White,
     borderRadius: 12,
     marginHorizontal: 5,
-    marginVertical: 8,
+    marginVertical: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 6,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 12,
     overflow: 'hidden',
   },
   imageContainer: {
@@ -228,7 +242,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 15,
     width: 30,
     height: 30,
@@ -237,16 +251,13 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 3,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
   },
-  favoriteIcon: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   productInfo: {
     padding: 12,
   },
@@ -305,10 +316,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 50,
   },
-  emptyStateIcon: {
-    fontSize: 64,
-    color: '#d1d5db',
+  emptyStateIconContainer: {
     marginBottom: 16,
+    alignItems: 'center',
   },
   emptyStateTitle: {
     fontSize: 20,
@@ -329,6 +339,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 10,
   },
   browseButtonText: {
     color: Colors.White,
@@ -352,6 +370,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 6,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 10,
   },
   retryText: {
     color: Colors.White,
