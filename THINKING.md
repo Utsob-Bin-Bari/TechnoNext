@@ -56,7 +56,13 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Added animation to improve user experience.
 
 # Commit 14: Map Implementation.
-* Use react-native-maps 
-* Android and ios premission handled through info.plist and AndroidManifest.xml
-* Android and ios is implementing Google Maps
-* For now dummy api key is given. Replacing the dummy api with actual api key will give all functionality.
+* Use react-native-maps. 
+* Android and ios premission handled through info.plist and AndroidManifest.xml.
+* Android and ios is implementing Google Maps.
+* For now dummy api key is given. Replacing the dummy api with actual api key will give all. functionality.
+
+# Commit 15: Map Implementation (With Free Street Map)
+* Use react-native-webview.
+* Permission are the same just remove the slot for google api key.
+* We are using free street maps instead of google maps.
+* No API Key Necessary.

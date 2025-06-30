@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import { View, Text, Animated, Platform } from 'react-native';
 import { TimeService } from '../../application/services/time';
 import { TimeEntity } from '../../domain/entities/time';
-import { Colors } from '../constants/Colors';
+import GlobalStyles from '../styles/GlobalStyle';
 
 interface TimerWidgetProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -102,17 +102,17 @@ const TimerWidget: React.FC<TimerWidgetProps> = ({
   return (
     <Animated.View 
       style={[
-        styles.container,
+        GlobalStyles.timerContainer,
         getPositionStyles(),
         { opacity: fadeAnim }
       ]}
     >
-      <View style={styles.content}>
-        <View style={styles.indicator} />
-        <Text style={styles.timeText}>
+      <View style={GlobalStyles.timerContent}>
+        <View style={GlobalStyles.timerIndicator} />
+        <Text style={GlobalStyles.timerTimeText}>
           {formatDisplayTime(timeEntity)}
         </Text>
-        <Text style={styles.updateText}>
+        <Text style={GlobalStyles.timerUpdateText}>
           Updates every {timeService.getUpdateInterval() / 1000}s
         </Text>
       </View>
@@ -120,65 +120,6 @@ const TimerWidget: React.FC<TimerWidgetProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 15,
-  },
-  content: {
-    backgroundColor: Colors.White,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderWidth: 1.5,
-    borderColor: Colors.Orange,
-    minWidth: 130,
-    alignItems: 'center',
-    shadowColor: Colors.Orange,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
-  },
-  indicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.Orange,
-    marginBottom: 4,
-    shadowColor: Colors.Orange,
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  timeText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#333',
-    textAlign: 'center',
-    lineHeight: 17,
-    letterSpacing: 0.3,
-  },
-  updateText: {
-    fontSize: 9,
-    color: '#888',
-    marginTop: 3,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-});
+
 
 export default TimerWidget; 

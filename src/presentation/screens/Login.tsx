@@ -6,7 +6,7 @@ import DynamicButton from '../components/DynamicButton';
 import DynamicTextInput from '../components/DynamicTextInput';
 import Logo from '../../../assets/svgs/Logo';
 import { Colors } from '../constants/Colors';
-import GlobalStyles from '../constants/GlobalStyle';
+import GlobalStyles from '../styles/GlobalStyle';
 import { TabParamList } from '../../domain/types/navigation';
 import { useLoginMutation } from '../../infrastructure/adapters/authApi';
 import { logIn, setLoading } from '../../application/store/action';
@@ -14,14 +14,13 @@ import { AuthStorage } from '../../application/services/login';
 import { AppDispatch, RootState } from '../../application/store/store';
 
 const LoginPage: React.FC = () => {
-    const [email, setEmail] = useState<string>('emilys');
-    const [password, setPassword] = useState<string>('emilyspass');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
     const navigation = useNavigation<NavigationProp<TabParamList>>();
     const dispatch = useDispatch<AppDispatch>();
     const [login, { isLoading }] = useLoginMutation();
     const { isAuthenticated } = useSelector((state: RootState) => state.auth.authentication || {});
 
-    // Auto-navigate to Home if already authenticated
     useEffect(() => {
         if (isAuthenticated) {
             navigation.navigate('Home');
@@ -33,7 +32,6 @@ const LoginPage: React.FC = () => {
             Alert.alert('Error', 'Please enter both username and password');
             return;
         }
-
         try {
             dispatch(setLoading({ isLoading: true }));
             const result = await login({
@@ -56,13 +54,8 @@ const LoginPage: React.FC = () => {
                 refreshToken: result.refreshToken,
             };
 
-            // Save to local storage
             await AuthStorage.saveAuthData(authData);
-            
-            // Update Redux state
             dispatch(logIn(authData));
-            
-            // Navigation will happen automatically via useEffect
         } catch (error: any) {
             dispatch(setLoading({ isLoading: false }));
             Alert.alert(
@@ -105,7 +98,7 @@ const LoginPage: React.FC = () => {
                             <DynamicTextInput
                                 value={email}
                                 onChangeText={handleEmailChange}
-                                placeholder='Enter username (demo: emilys)'
+                                placeholder='Enter username'
                                 autoCapitalize='none'
                             />
                         </View>
@@ -114,7 +107,7 @@ const LoginPage: React.FC = () => {
                             <DynamicTextInput
                                 value={password}
                                 onChangeText={handlePasswordChange}
-                                placeholder='Enter password (demo: emilyspass)'
+                                placeholder='Enter password'
                                 autoCapitalize='none'
                                 secureTextEntry={false}
                             />

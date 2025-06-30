@@ -3,6 +3,8 @@ import { View, Text, Alert, PermissionsAndroid, Platform, StyleSheet, SafeAreaVi
 import { WebView } from 'react-native-webview';
 import Geolocation from '@react-native-community/geolocation';
 import { Colors } from '../constants/Colors';
+import Header from '../components/Header';
+import { generateMapHTML } from '../../application/services/map';
 
 interface LocationCoords {
   latitude: number;
@@ -83,98 +85,7 @@ const Map: React.FC = () => {
     );
   }, []);
 
-  const generateMapHTML = () => {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>OpenStreetMap</title>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <style>
-          body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-          }
-          #map {
-            height: 100vh;
-            width: 100%;
-          }
-          .leaflet-control-attribution {
-            font-size: 10px !important;
-          }
-        </style>
-      </head>
-      <body>
-        <div id="map"></div>
-        
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-        <script>
-          // Initialize the map
-          var map = L.map('map').setView([${location.latitude}, ${location.longitude}], 13);
-          
-          // Add OpenStreetMap tiles
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19,
-            tileSize: 256,
-            zoomOffset: 0
-          }).addTo(map);
-          
-          // Custom icon for user location
-          var userIcon = L.divIcon({
-            className: 'user-location-marker',
-            html: '<div style="background-color: #007AFF; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,122,255,0.5);"></div>',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-          });
-          
-          // Add user location marker
-          var userMarker = L.marker([${location.latitude}, ${location.longitude}], {
-            icon: userIcon
-          }).addTo(map);
-          
-          userMarker.bindPopup("<b>You are here!</b><br>Your current location").openPopup();
-          
-          // Listen for messages from React Native
-          window.addEventListener('message', function(event) {
-            try {
-              var data = JSON.parse(event.data);
-              if (data.type === 'updateLocation') {
-                var newLatLng = [data.latitude, data.longitude];
-                map.setView(newLatLng, 13);
-                userMarker.setLatLng(newLatLng);
-                userMarker.bindPopup("<b>You are here!</b><br>Your current location").openPopup();
-              }
-            } catch (e) {
-              console.log('Error parsing message:', e);
-            }
-          });
-          
-          // Add zoom controls
-          L.control.zoom({
-            position: 'bottomright'
-          }).addTo(map);
-          
-          // Add scale control
-          L.control.scale({
-            position: 'bottomleft'
-          }).addTo(map);
-          
-          // Notify React Native that map is ready
-          setTimeout(function() {
-            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({
-              type: 'mapReady'
-            }));
-          }, 1000);
-        </script>
-      </body>
-      </html>
-    `;
-  };
+
 
   const handleWebViewMessage = (event: any) => {
     try {
@@ -187,12 +98,7 @@ const Map: React.FC = () => {
     }
   };
 
-  const renderHeader = () => (
-    <View style={styles.header}>
-      <Text style={styles.headerTitle}>Your Location</Text>
-      <Text style={styles.headerSubtitle}>OpenStreetMap</Text>
-    </View>
-  );
+
 
   const renderLoadingState = () => (
     <View style={styles.loadingContainer}>
@@ -213,7 +119,11 @@ const Map: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.White} />
-      {renderHeader()}
+      <Header 
+        type="map"
+        title="Your Location"
+        subtitle="OpenStreetMap"
+      />
       
       {isLoading ? (
         renderLoadingState()
@@ -223,7 +133,7 @@ const Map: React.FC = () => {
             <WebView
               ref={webViewRef}
               style={styles.map}
-              source={{ html: generateMapHTML() }}
+              source={{ html: generateMapHTML(location) }}
               onMessage={handleWebViewMessage}
               javaScriptEnabled={true}
               domStorageEnabled={true}
@@ -247,28 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.White,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 10 : 38,
-    paddingBottom: 7,
-    backgroundColor: Colors.White,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 2,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-  },
+
   mapContainer: {
     flex: 1,
   },
