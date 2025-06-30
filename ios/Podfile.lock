@@ -5,11 +5,6 @@ PODS:
   - FBLazyVector (0.80.0)
   - fmt (11.0.2)
   - glog (0.3.5)
-  - Google-Maps-iOS-Utils (6.1.0):
-    - GoogleMaps (~> 9.0)
-  - GoogleMaps (9.3.0):
-    - GoogleMaps/Maps (= 9.3.0)
-  - GoogleMaps/Maps (9.3.0)
   - hermes-engine (0.80.0):
     - hermes-engine/Pre-built (= 0.80.0)
   - hermes-engine/Pre-built (0.80.0)
@@ -1682,100 +1677,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps (1.24.3):
-    - react-native-maps/Maps (= 1.24.3)
-  - react-native-maps/Generated (1.24.3):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - hermes-engine
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
-  - react-native-maps/Google (1.24.3):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - Google-Maps-iOS-Utils (= 6.1.0)
-    - GoogleMaps (= 9.3.0)
-    - hermes-engine
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - react-native-maps/Generated
-    - react-native-maps/Maps
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
-  - react-native-maps/Maps (1.24.3):
-    - boost
-    - DoubleConversion
-    - fast_float
-    - fmt
-    - glog
-    - hermes-engine
-    - RCT-Folly
-    - RCT-Folly/Fabric
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - react-native-maps/Generated
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - SocketRocket
-    - Yoga
   - react-native-safe-area-context (5.5.0):
     - boost
     - DoubleConversion
@@ -1856,6 +1757,35 @@ PODS:
     - React-ImageManager
     - React-jsi
     - react-native-safe-area-context/common
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
+  - react-native-webview (13.15.0):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -2564,9 +2494,8 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
-  - react-native-maps (from `../node_modules/react-native-maps`)
-  - react-native-maps/Google (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -2607,8 +2536,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Google-Maps-iOS-Utils
-    - GoogleMaps
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2695,10 +2622,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
-  react-native-maps:
-    :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2779,8 +2706,6 @@ SPEC CHECKSUMS:
   FBLazyVector: 778b815a6fb3fa1599f581ffb9a5e85fad313c1d
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
-  GoogleMaps: b58e9627004f47043897eeae830c3ef023678f3b
   hermes-engine: 7068e976238b29e97b3bafd09a994542af7d5c0b
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: ff787f6c860a1b97dd1bc27264b61d23ad1994da
@@ -2816,8 +2741,8 @@ SPEC CHECKSUMS:
   React-Mapbuffer: f5754c33877eaf36e4c76c613b35615a181c85c5
   React-microtasksnativemodule: 23df6374a3ac422d8c2927839bcaeed61fee3dad
   react-native-geolocation: f01ad4718ad1d015d0c0dd12a6f707354022530e
-  react-native-maps: f5a8ba19f84c64f641d2fa745b769dbafdfb9e4e
   react-native-safe-area-context: 3bae4f8474c13ab141c40ed6c5c33f6177778d71
+  react-native-webview: 9a8ea59197aa76145b8ce72aa3eea69f1e89dd38
   React-NativeModulesApple: e16d5c133019987285f001fbf1461a861e40426f
   React-oscompat: 7c0a341cc31e350da71ddf2e46de0a845d1d1626
   React-perflogger: c91e01612298b74f70d846ae3666d2b078c547e0
@@ -2856,6 +2781,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 0c4b7d2aacc910a1f702694fa86be830386f4ceb
 
-PODFILE CHECKSUM: 3900ab3221bb0e5ee3aac514cf4d3d513719c966
+PODFILE CHECKSUM: 7bb1f4cdbb6c4f919e45c09b2222b705f56b442d
 
 COCOAPODS: 1.16.2

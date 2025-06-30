@@ -54,3 +54,9 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Time service to handle start, stop logic on application layer. Used singleton to keep one instant to prevent memory leak. 
 * Time widget to make a design align with our design and give is some default position.
 * Added animation to improve user experience.
+
+# Commit 14: Map Implementation.
+* Use react-native-maps 
+* Android and ios premission handled through info.plist and AndroidManifest.xml
+* Android and ios is implementing Google Maps
+* For now dummy api key is given. Replacing the dummy api with actual api key will give all functionality.

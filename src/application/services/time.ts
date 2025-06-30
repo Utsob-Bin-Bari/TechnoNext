@@ -82,3 +82,4 @@ export class TimeService {
     return this.config.updateInterval;
   }
 }
+
