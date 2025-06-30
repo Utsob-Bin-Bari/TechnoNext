@@ -66,3 +66,13 @@ Reason: Although MVVC is more popular as Frontend Architectural Pattarn, I used 
 * Permission are the same just remove the slot for google api key.
 * We are using free street maps instead of google maps.
 * No API Key Necessary.
+
+# Commit 16: Refactoring the code base.
+* Global Styles contains all style
+* As much as possible reusable component created.
+* Screens just combine the component and add additional component.
+* Layer Architucture was mostly followed. 
+* Some change has been made for beteer user experience
+
+# Commit 17: Final Commit 
+* Removed unused dependency.
